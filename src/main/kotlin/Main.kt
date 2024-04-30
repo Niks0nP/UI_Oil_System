@@ -26,57 +26,70 @@ import mainscreen.mainScreen
 @Composable
 @Preview
 fun App() {
-    val oilNavType = OilNavType.LOGIN
+    MaterialTheme {
+        var oilNavType by remember { mutableStateOf(OilNavType.LOGIN) }
+        Crossfade(targetState = oilNavType) { value ->
+            when (value) {
+                OilNavType.LOGIN -> {
+                    loginScreen {
+                        oilNavType = OilNavType.MAIN_SCREEN
+                    }
+                }
+                OilNavType.MAIN_SCREEN -> mainScreen {
+                    oilNavType = OilNavType.LOGIN
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun loginScreen(
+    onNavigate: () -> Unit
+) {
+
     val text by remember { mutableStateOf("Войти") }
     var loginText by remember { mutableStateOf("") }
     var passwordText by remember { mutableStateOf("") }
 
-    MaterialTheme {
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+    Column(horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Text(
+            text = "Вход в систему",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 10.dp)
+        )
+        OutlinedTextField(
+            value = loginText,
+            onValueChange = {loginText = it},
+            label = { Text("Логин")},
             modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Text(
-                text = "Вход в систему",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 10.dp)
-            )
-            OutlinedTextField(
-                value = loginText,
-                onValueChange = {loginText = it},
-                label = { Text("Логин")},
-                modifier = Modifier
-                    .padding(0.dp, 0.dp, 0.dp, 5.dp)
-            )
-            OutlinedTextField(
-                value = passwordText,
-                onValueChange = {passwordText = it},
-                label = { Text("Пароль") },
-                modifier = Modifier
-                    .padding(0.dp, 0.dp, 0.dp, 20.dp)
-            )
-            Button(onClick = {
-                //changeScreen(oilNavType)
-            },
-                modifier = Modifier
-                    .size(280.dp, 40.dp)) {
-                Text(text)
-            }
+                .padding(0.dp, 0.dp, 0.dp, 5.dp)
+        )
+        OutlinedTextField(
+            value = passwordText,
+            onValueChange = {passwordText = it},
+            label = { Text("Пароль") },
+            modifier = Modifier
+                .padding(0.dp, 0.dp, 0.dp, 20.dp)
+        )
+        Button(onClick = {
+            onNavigate()
+        },
+            modifier = Modifier
+                .size(280.dp, 40.dp)) {
+            Text(text)
         }
-
     }
 }
 
 @Composable
 fun changeScreen(oilNavType: OilNavType) {
-    Crossfade(targetState = oilNavType) { oilNavType ->
-        when (oilNavType) {
-            OilNavType.LOGIN -> mainScreen()
-            OilNavType.MAIN_SCREEN -> TODO()
-        }
-    }
+
 }
 
 fun main() = application {
@@ -85,8 +98,7 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         state = WindowState(WindowPlacement.Maximized)
     ) {
-        //App()
-        mainScreen()
+        App()
     }
 }
 
