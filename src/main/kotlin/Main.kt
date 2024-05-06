@@ -14,7 +14,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import details.OilNavType
 import kotlinx.coroutines.launch
-import mainscreen.mainScreen
+import screens.mainScreen
 import repositories.GasStationInfoProvider
 
 
@@ -33,6 +33,7 @@ fun app() {
                 OilNavType.MAIN_SCREEN -> mainScreen {
                     oilNavType = OilNavType.LOGIN
                 }
+                OilNavType.REGISTRATION_TEST -> TODO()
             }
         }
     }
