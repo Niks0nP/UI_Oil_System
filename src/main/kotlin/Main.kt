@@ -33,7 +33,6 @@ fun app() {
                 OilNavType.MAIN_SCREEN -> mainScreen {
                     oilNavType = OilNavType.LOGIN
                 }
-                OilNavType.REGISTRATION_TEST -> TODO()
             }
         }
     }

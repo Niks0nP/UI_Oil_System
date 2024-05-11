@@ -11,10 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +23,7 @@ import details.ProjectColors
 import repositories.EquipmentInfoProvider
 
 @Composable
-fun mainTableAndObject() {
+fun mainTableAndObject(testStatus: Boolean) {
 
     val equipmentInfo = remember { EquipmentInfoProvider.equipmentInfo }
     val column1Weight = 0.1f
@@ -72,7 +69,7 @@ fun mainTableAndObject() {
                     }
                 }
             }
-            startTestPanel()
+            startTestPanel(testStatus)
         }
         Column(modifier = Modifier.weight(0.25f)) {
             testingObject()
@@ -81,15 +78,15 @@ fun mainTableAndObject() {
 }
 
 @Composable
-fun startTestPanel() {
+fun startTestPanel(testStatus: Boolean) {
     Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom,
         modifier = Modifier.fillMaxSize().padding(0.dp, 0.dp, 20.dp, 10.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
 
-            Text("Нет добавленных проб!")
+            Text(text = (if (testStatus) "" else "Нет добавленных проб!"))
             OutlinedButton(
                 onClick = {},
-                enabled = true,
+                enabled = (testStatus),
                 modifier = Modifier.size(300.dp, 50.dp),
                 colors = ButtonDefaults.buttonColors(
                     contentColor = Color.Black,
