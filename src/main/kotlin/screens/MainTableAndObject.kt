@@ -18,12 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import details.ProjectColors
 import repositories.EquipmentInfoProvider
+import repositories.TestInfoProvider
 
 @Composable
-fun mainTableAndObject(testStatus: Boolean) {
+fun mainTableAndObject(testStatus: Boolean, onNavigateTest: () -> Unit) {
 
     val equipmentInfo = remember { EquipmentInfoProvider.equipmentInfo }
     val column1Weight = 0.1f
@@ -69,7 +71,7 @@ fun mainTableAndObject(testStatus: Boolean) {
                     }
                 }
             }
-            startTestPanel(testStatus)
+            startTestPanel(testStatus,onNavigateTest)
         }
         Column(modifier = Modifier.weight(0.25f)) {
             testingObject()
@@ -78,14 +80,14 @@ fun mainTableAndObject(testStatus: Boolean) {
 }
 
 @Composable
-fun startTestPanel(testStatus: Boolean) {
+fun startTestPanel(testStatus: Boolean, onNavigateTest: () -> Unit) {
     Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom,
         modifier = Modifier.fillMaxSize().padding(0.dp, 0.dp, 20.dp, 10.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
 
             Text(text = (if (testStatus) "" else "Нет добавленных проб!"))
             OutlinedButton(
-                onClick = {},
+                onClick = {onNavigateTest()},
                 enabled = (testStatus),
                 modifier = Modifier.size(300.dp, 50.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -94,7 +96,7 @@ fun startTestPanel(testStatus: Boolean) {
                 ),
                 border = BorderStroke(1.dp, Color.Black)
             ) {
-                Text("Начать испытания")
+                Text("Начать проверку")
             }
         }
     }
@@ -109,7 +111,9 @@ fun elementTable(text: String, style: FontWeight) {
                 .fillMaxWidth()
                 .border(1.dp, Color.LightGray)
                 .padding(12.dp, 6.dp, 6.dp, 6.dp),
-            fontWeight = style
+            fontWeight = style,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -134,8 +138,6 @@ fun readyElement(color: Color) {
 
 @Composable
 fun testingObject() {
-    val isEnabled1 = remember { mutableStateOf(false) }
-    val isEnabled2 = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxHeight().background(Color.White).border(1.dp, Color.Black)) {
         Text(
@@ -147,13 +149,13 @@ fun testingObject() {
                 .padding(12.dp)
         )
 
-        buttonObject("Бензин АИ-95", isEnabled1) {
-            isEnabled1.value = true
-            isEnabled2.value = false
+        buttonObject("Бензин АИ-95", TestInfoProvider.isEnabled95) {
+            TestInfoProvider.isEnabled95.value = true
+            TestInfoProvider.isEnabled92.value = false
         }
-        buttonObject("Бензин АИ-92", isEnabled2) {
-            isEnabled1.value = false
-            isEnabled2.value = true
+        buttonObject("Бензин АИ-92", TestInfoProvider.isEnabled92) {
+            TestInfoProvider.isEnabled95.value = false
+            TestInfoProvider.isEnabled92.value = true
         }
 
         Row(modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 10.dp).fillMaxHeight(),

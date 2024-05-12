@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,6 +29,7 @@ fun mainScreen(
 ) {
     var mainScreenNavType by remember { mutableStateOf(MainScreenNavType.MAIN_SCREEN) }
     var testStatus = GasStationInfoProvider.getTestStatus()
+    val menuButtonsVisibility = remember { mutableStateOf(1f) }
 
 
     Column(
@@ -37,7 +39,7 @@ fun mainScreen(
             onNavigate = onNavigate
         )
         Spacer(modifier = Modifier.padding(10.dp))
-        menuButtons{
+        menuButtons(menuButtonsVisibility.value) {
             if (GasStationInfoProvider.getButtonMenuClick()[0]) {
                 mainScreenNavType = MainScreenNavType.REGISTRATION_SCREEN
             } else
@@ -48,9 +50,14 @@ fun mainScreen(
         Crossfade(targetState = mainScreenNavType) { value ->
             when (value) {
                 MainScreenNavType.MAIN_SCREEN -> {
+
+                    menuButtonsVisibility.value = 1f
+
                     Column {
                         Spacer(modifier = Modifier.padding(25.dp))
-                        mainTableAndObject(testStatus)
+                        mainTableAndObject(testStatus) {
+                            mainScreenNavType = MainScreenNavType.TEST_SCREEN
+                        }
                     }
                 }
                 MainScreenNavType.REGISTRATION_SCREEN -> {
@@ -72,9 +79,15 @@ fun mainScreen(
                     }
                     GasStationInfoProvider.clearButtons()
                 }
+                MainScreenNavType.TEST_SCREEN -> {
+                    Spacer(modifier = Modifier.padding(25.dp))
+                    menuButtonsVisibility.value = 0f
+                    testScreen{
+                        mainScreenNavType = MainScreenNavType.MAIN_SCREEN
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -127,12 +140,12 @@ fun topInfoAboutPerson(
 }
 
 @Composable
-fun menuButtons(onNavigate: () -> Unit) {
+fun menuButtons(visibility: Float, onNavigate: () -> Unit) {
     val buttonsInfo = remember { ButtonInfoProvider.buttonsInfo }
     LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.padding(20.dp, 0.dp, 0.dp, 0.dp)) {
         items(buttonsInfo) {
-            menuButtonItem(it) {
+            menuButtonItem(it, visibility) {
                 onNavigate()
             }
         }
@@ -140,7 +153,7 @@ fun menuButtons(onNavigate: () -> Unit) {
 }
 
 @Composable
-fun menuButtonItem(buttonInfo: ButtonInfo, onNavigate: () -> Unit) {
+fun menuButtonItem(buttonInfo: ButtonInfo, visibility: Float, onNavigate: () -> Unit) {
     Button(onClick = {
         when (buttonInfo.idBtn) {
             1 -> {
@@ -155,7 +168,7 @@ fun menuButtonItem(buttonInfo: ButtonInfo, onNavigate: () -> Unit) {
     },
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color.White),
-        modifier = Modifier.clip(RoundedCornerShape(10.dp)).size(150.dp, 85.dp)) {
+        modifier = Modifier.clip(RoundedCornerShape(10.dp)).size(150.dp, 85.dp).alpha(visibility)) {
         Column {
             Image(
                 painter = painterResource(buttonInfo.imageBtn),
