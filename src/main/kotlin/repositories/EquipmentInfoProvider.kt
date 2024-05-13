@@ -41,7 +41,7 @@ object EquipmentInfoProvider {
         EquipmentInfo(
             id = 4,
             equipName = "IIOT Аппарат определения плотности бензина",
-            description = "Данная проверка определяет плотность бензина",
+            description = "Данная аппарат определяет плотность бензина",
             measurableParameter = "Плотность бензина",
             unitOfMeasure = "кг/м^3",
             minValue = 740.0,

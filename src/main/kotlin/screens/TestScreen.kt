@@ -39,10 +39,23 @@ fun testScreen(onNavigateToMainScreen: () -> Unit) {
         Column(modifier = Modifier.background(Color.White)) {
             tableTest()
         }
-        Row(horizontalArrangement = Arrangement.End,
-            modifier = Modifier.padding(0.dp, 16.dp, 16.dp, 0.dp)) {
+        Spacer(modifier = Modifier.padding(100.dp))
+        Column(modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Информация по проверке",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 40.dp))
+        }
+        Column(modifier = Modifier.background(Color.White)) {
+            resultTable()
+        }
+
+        Row(modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp, 16.dp, 0.dp),
+            horizontalArrangement = Arrangement.Center) {
             buttonTest("Сформировать отчет", ProjectColors.GREEN_BUTTON, onNavigateToMainScreen)
         }
+        Spacer(modifier = Modifier.fillMaxSize().background(ProjectColors.GREEN_BACKGROUND))
     }
 }
 
@@ -130,3 +143,56 @@ fun tableTest() {
         }
     }
 }
+
+@Composable
+fun resultTable() {
+    val column1Weight = 0.04f
+    val column2Weight = 0.2f
+    val column3Weight = 0.1f
+    val column4Weight = 0.3f
+    val column5Weight = 0.3f
+    val fontBold = FontWeight.Bold
+    val fontNormal = FontWeight.Normal
+
+    Row {
+        Column(modifier = Modifier.weight(column1Weight)) {
+            elementTable("№", fontBold)
+        }
+        Column(modifier = Modifier.weight(column2Weight)) {
+            elementTable("Вид теста", fontBold)
+        }
+        Column(modifier = Modifier.weight(column3Weight)) {
+            elementTable("Статус", fontBold)
+        }
+        Column(modifier = Modifier.weight(column4Weight)) {
+            elementTable("Вывод", fontBold)
+        }
+        Column(modifier = Modifier.weight(column5Weight)) {
+            elementTable("Комментарий", fontBold)
+        }
+    }
+
+    Row {
+        Column(modifier = Modifier.weight(column1Weight)) {
+            elementTable("1", fontNormal)
+        }
+        Column(modifier = Modifier.weight(column2Weight)) {
+            elementTable("Проверка бензина", fontNormal)
+        }
+        Column(modifier = Modifier.weight(column3Weight)) {
+            elementTable("Завершено", fontNormal)
+        }
+        Column(modifier = Modifier.weight(column4Weight)) {
+            elementTable("Топливо непригодно для использования", fontNormal)
+        }
+        Column(modifier = Modifier.weight(column5Weight)) {
+            elementTable("Не пройдена проверка фракционного состава топлива", fontNormal)
+        }
+    }
+}
+
+
+
+
+
+
